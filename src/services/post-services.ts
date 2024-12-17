@@ -17,6 +17,35 @@ export const findAll = async () => {
    })
 }
 
+export const getAllPostsByUserId = async (userId: number) => {
+   if (!userId) {
+      throw new Error("UserId is required")
+   }
+
+   return await db.posts.findMany({
+      where: {
+         userId: userId,
+      },
+   })
+}
+
+export const toggleReadStatus = async (id: number) => {
+   const existingPost = await db.posts.findFirst({where: {id}})
+
+   if (!existingPost) {
+      throw new Error("Post not found")
+   }
+
+   const updatePost = await db.posts.update({
+      where: {id},
+      data: {
+         isRead: !existingPost.isRead,
+      },
+   })
+
+   return updatePost
+}
+
 export const findById = async (id: number) => {
    return await db.posts.findFirst({
       where: {id},

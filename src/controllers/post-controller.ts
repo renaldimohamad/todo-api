@@ -9,6 +9,32 @@ export const findAll = async (req: Request, res: Response) => {
    res.json(posts)
 }
 
+export const getAllPostsByUserId = async (req: Request, res: Response) => {
+   const {userId} = req.params
+
+   try {
+      const posts = await postServices.getAllPostsByUserId(parseInt(userId, 10))
+      console.log("🚀 ~ getAllPostsByUserId ~ posts:", posts)
+
+       res.json(posts)
+   } catch (error) {
+      console.error(error)
+      errorHandler(res, error as unknown as Error)
+   }
+}
+
+export const toggleReadStatus = async (req: Request, res: Response) => {
+   const {id} = req.params
+
+   try {
+      const updatedPost = await postServices.toggleReadStatus(Number(id))
+      res.status(200).json(updatedPost)
+    
+   } catch (error) {
+      errorHandler(res, error as unknown as Error)
+   }
+}
+
 export const findById = async (req: Request, res: Response) => {
    const posts = await postServices.findById(parseInt(req.params.id))
 
